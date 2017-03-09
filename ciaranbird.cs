@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GridWorld;
 
+// My great namespace
 namespace ciaranbird
 {
     public class ciaranbird : GridWorld.BasePlayer
