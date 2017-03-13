@@ -9,11 +9,17 @@ namespace ciaranbird
 {
     public class Board
     {
+        private static int NODE_COUNTER = 0;
+        int Id;
+
         public int[,] grid;
         public Board(PlayerWorldState state)
         {
             BuildGrid(state);
+            Id = NODE_COUNTER++;
         }
+
+        public int getID() { return Id; }
 
         private void BuildGrid(PlayerWorldState currentstate)
         {

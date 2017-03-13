@@ -12,6 +12,9 @@ namespace ciaranbird
         private PlayerWorldState currentstate;
         int[] myPos;
         int[,] grid;
+        int moves = 0;
+        public static Board prevBoard;
+        int startup;
 
         public ciaranbird() : base()
         {
@@ -27,18 +30,22 @@ namespace ciaranbird
 
             if (onBoard(x + 1, y) && isSquareEmpty(x + 1, y)) //Right
             {
+                moves++;
                 retVal.Add(Command.Direction.Right);
             }
             if (onBoard(x, y - 1) && isSquareEmpty(x, y - 1)) //Up
             {
+                moves++;
                 retVal.Add(Command.Direction.Down); 
             }
             if (onBoard(x - 1, y) && isSquareEmpty(x - 1, y)) //Left
             {
+                moves++;
                 retVal.Add(Command.Direction.Left);
             }
             if (onBoard(x, y + 1) && isSquareEmpty(x, y + 1)) //Down
             {
+                moves++;
                 retVal.Add(Command.Direction.Up);
             }
             
@@ -88,11 +95,18 @@ namespace ciaranbird
 
             //Save my current position
             myPos = GetMySnailPosition();
+            if(startup != 0)
+            {
+                prevBoard = board;
+                TreeNode node = new TreeNode(prevBoard);
+                node.setParent(false);
+                node.setChildren(true);
 
-            //Build our grid
-            //BuildGrid();
-            Board board = new Board(currentstate);
-            board.grid[0, 0];
+                startup++;
+            }
+
+            Board board = new Board(currentstate); //Creates a board you
+            initialiseNodes(board, myPos[0], myPos[1]);
 
             //Get a list of references to every square next to our snail
             List<Command.Direction> potentialMoves = GetSquaresAdjacentToMySnail();
@@ -115,51 +129,17 @@ namespace ciaranbird
             }
         }
 
-        //public void initialiseNodes()
-        //{
-        //    TreeNode node1 = new TreeNode();
-        //}
-
-        /// <summary>
-        /// Fill our local grid with zeroes and a one for our position
-        /// </summary>
-        //private void BuildGrid()
-        //{
-        //    grid = new int[currentstate.GridWidthInSquares, currentstate.GridHeightInSquares];
-        //    String concatedInfo = "";
-        //    for (int y = 0; y < currentstate.GridHeightInSquares; y++)
-        //    {
-        //        for (int x = 0; x < currentstate.GridWidthInSquares; x++)
-        //        {
-        //            if(currentstate[x, y].Contents == GridSquare.ContentType.Empty)
-        //            {
-        //                grid[x, y] = 0;
-        //                concatedInfo += " 0,";
-        //            }
-        //            else if(currentstate[x,y].Contents == GridSquare.ContentType.Snail)
-        //            {
-        //                grid[x, y] = 2;
-        //                concatedInfo += " 2,";
-        //            }
-        //            else if((currentstate[x,y].Contents == GridSquare.ContentType.Trail) && (currentstate[x, y].Player == currentstate.ID))
-        //            {
-        //                grid[x, y] = 1;
-        //                concatedInfo += " 1,";
-        //            }
-        //            else if((currentstate[x, y].Contents == GridSquare.ContentType.Trail) && (currentstate[x, y].Player != currentstate.ID))
-        //            {
-        //                grid[x, y] = 3;
-        //                concatedInfo += " 3,";
-        //            }
-        //        }
-        //        WriteTrace(concatedInfo);
-        //        concatedInfo = "";
-        //    }
-        //}
-
-        public int getSurroundingSlimeScore(int x, int y)
+        public void initialiseNodes(Board board, int x, int y)
         {
-            return 0;
+            //If the snail has moved then create a Parent Node
+            if(board.grid[x + 1, y] == 0 || board.grid[x + 1, y] == 1) //If the square is empty or has my trail, add it to children
+            {
+                TreeNode node = new TreeNode(board);
+                node.setParent(prevBoard);
+                node.
+                //Create a node
+                //Add potentional boards to this.
+            }
         }
 
         public bool isSquareEmpty(int x, int y)
