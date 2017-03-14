@@ -128,18 +128,112 @@ namespace ciaranbird
                 return new Command(myPos[0], myPos[1], stuckMoves[randomStuck]);
             }
         }
-
+        /// <summary>
+        /// Initialises a node in whilst and looks for the possible movements and edits a grid to all the movements and changes the grid responsibly.
+        /// </summary>
         public void initialiseNodes(Board board, int x, int y)
         {
             //If the snail has moved then create a Parent Node
-            if(board.grid[x + 1, y] == 0 || board.grid[x + 1, y] == 1) //If the square is empty or has my trail, add it to children
+            if(board.grid[x + 1, y] == 0) //If the square is empty or has my trail, add it to children
             {
                 TreeNode node = new TreeNode(board);
-                node.setParent(prevBoard);
-                node.
-                //Create a node
-                //Add potentional boards to this.
+                node.setParent(true);
+                board.grid[x, y] = 1; //Set the previous square to slime
+                board.grid[x + 1, y] = 2; //Set the square moving to as a snail.
             }
+            if (board.grid[x - 1, y] == 0) //If the square is empty or has my trail, add it to children
+            {
+                TreeNode node = new TreeNode(board);
+                node.setParent(true);
+                board.grid[x, y] = 1; //Set the previous square to slime
+                board.grid[x - 1, y] = 2; //Set the square moving to as a snail.
+            }
+            if (board.grid[x, y + 1] == 0) //If the square is empty or has my trail, add it to children
+            {
+                TreeNode node = new TreeNode(board);
+                node.setParent(true);
+                board.grid[x, y] = 1; //Set the previous square to slime
+                board.grid[x, y + 1] = 2; //Set the square moving to as a snail.
+            }
+            if (board.grid[x, y - 1] == 0) //If the square is empty or has my trail, add it to children
+            {
+                TreeNode node = new TreeNode(board);
+                node.setParent(true);
+                board.grid[x, y] = 1; //Set the previous square to slime
+                board.grid[x, y - 1] = 2; //Set the square moving to as a snail.
+            }
+            //Alter the board grid for that node so that it's different
+
+            //To put alter the new table depending on whether the square next to the snail
+            //is a slime and replaces squares touched with 1's until it finds the last trail and puts a snail there
+            int steps1 = currentstate.GridWidthInSquares - x; //To know how far away from the border you are.
+            int steps2 = currentstate.GridHeighInSquares - y;
+            if (board[x + 1, y] == 1) //if the square to the right is slime
+            {
+                for (int i = 1; i < steps1; i++)
+                {
+                    if (board[x + i, y] == 1) //if it's not equal to 1
+                    {
+                        board[x + i, y] = 1; //set that to my snail pos
+                    }
+                    if (board[x + i, y] == 2 || board[x + i, y] == 0)
+                    {
+                        board[x + i - 1, y] = 2;
+                        break;
+                    }
+                }
+            }
+            if (board[x - 1, y] == 1) //if the square to the left is slime
+            {
+                for (int i = 1; i < x; i++)
+                {
+                    if (board[x - i, y] == 1) //if it's not equal to 1
+                    {
+                        board[x - i, y] = 1; //set that to my snail pos
+                    }
+                    if(board[x - i, y] == 2 || board[x - i, y] == 0)
+                    {
+                        board[x - i + 1, y] = 2;
+                        break;
+                    }
+                }
+            }
+            if (board[x, y + 1] == 1) //if the square to the top is slime
+            {
+                for (int i = 1; i < steps2; i++)
+                {
+                    if (board[x, y + i] == 1) //if it's not equal to 1
+                    {
+                        board[x, y + i] = 1; //set that to my snail pos
+                    }
+                    if (board[x, y + i] == 2 || board[x, y + i] == 0)
+                    {
+                        board[x, y + i] = 1;
+                    }
+                }
+            }
+            if (board[x, y - 1] == 1) //if the square to the bottom is slime
+            {
+                for (int i = 1; i < y; i++)
+                {
+                    if (board[x , y - i] == 1) //if it's not equal to 1
+                    {
+                        board[x, y - i] = 2; //set that to my snail pos
+                    }
+                    if (board[x, y - i] == 2 || board[x, y - i] == 0)
+                    {
+                        board[x, y - i + 1] = 1;
+                    }
+                }
+            }
+            //To put alter the new table depending on whether the square next to the snail
+            //is a slime and replaces squares touched with 1's until it finds the last trail and puts a snail there
+        }
+
+        public void setNode(TreeNode node, bool parent, bool child)
+        {
+            node.setParent(parent);
+            node.setChildren(child);
         }
 
         public bool isSquareEmpty(int x, int y)
